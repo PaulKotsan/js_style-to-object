@@ -6,35 +6,22 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  // This onbject will be returned.
-  const styledObject = {};
+  const cssProperties = {};
 
-  // Who the hell write sourceString like that? My grandma can do better...
-  // If i ever see this during actuall job, i'll leave the company.
-  //                                         (through window)
-  const cleanString = sourceString
-    .replace(/\s*;\s*$/, '')
-    .replace(/\s*:\s*/g, ':')
-    .trim();
+  // Access "backcround-color:    #fff"
+  const splittedString = sourceString.split(';');
 
-  // Split into elements.
-  const splitToElements = cleanString.split(';').filter(Boolean);
+  for (const currentElement of splittedString) {
+    // Example: "background-color", "   #fff"
+    const splitElements = currentElement.split(':');
 
-  for (const currentElement of splitToElements) {
-    // "background-color:#fff" -> "background-color", "#fff";
-    //                                    0              1
-    const splitElement = currentElement.split(':');
-
-    // Make sure to not read undefined value.
-    if (splitElement.length === 2) {
-      const property = splitElement[0].trim();
-      const value = splitElement[1].trim();
-
-      styledObject[property] = value;
+    if (splitElements.length === 2) {
+      // Example: "background-color": "#fff", all spaces from sides are deleted
+      cssProperties[splitElements[0].trim()] = splitElements[1].trim();
     }
   }
 
-  return styledObject;
+  return cssProperties;
 }
 
 module.exports = convertToObject;
